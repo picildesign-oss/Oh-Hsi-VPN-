@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 jobs:
   build:
@@ -13,14 +13,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: set up JDK 11
+
+    # 1. Setup JDK 17 (WireGuard build အတွက် လိုအပ်သည်)
+    - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
         distribution: 'temurin'
-        cache: gradle
+        java-version: '17'
 
+    # 2. Setup Android SDK
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    # 3. Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+
+    # 4. Build APK using Gradle
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+
+    # 5. Upload APK artifact (Build ပြီးထွက်လာမည့် APK ကို Download ဆွဲရန်)
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: OhHsiVPN-Debug-APK
+        path: ui/build/outputs/apk/debug/*.apk

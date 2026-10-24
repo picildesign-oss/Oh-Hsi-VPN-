@@ -1,7 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-val pkg: String = providers.gradleProperty("wireguardPackageName").get()
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.legacy.kapt)
@@ -14,9 +12,10 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    namespace = pkg
+    // Custom Package Name Setup
+    namespace = "com.ohhsi.vpn"
     defaultConfig {
-        applicationId = pkg
+        applicationId = "com.ohhsi.vpn"
         minSdk = 24
         versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()
         versionName = providers.gradleProperty("wireguardVersionName").get()

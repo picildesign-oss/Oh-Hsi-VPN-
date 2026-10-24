@@ -20,21 +20,27 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # 2. Go Setup (WireGuard tunnel module အတွက် မဖြစ်မနေ လိုအပ်ပါသည်)
+    # 2. Go Setup (WireGuard Go Backend)
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
         go-version: '1.22'
 
-    # 3. Executable Permission ပေးခြင်း
+    # 3. Android NDK Setup (Tunnel C/C++ compilation အတွက် မဖြစ်မနေ လိုအပ်ပါသည်)
+    - name: Setup Android NDK
+      uses: natsam/setup-ndk@v1
+      with:
+        ndk-version: r26b
+
+    # 4. Executable Permission ပေးခြင်း
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # 4. Build Debug APK (Stacktrace အပြည့်အစုံကြည့်နိုင်ရန် --stacktrace ထည့်ထားသည်)
+    # 5. Build Debug APK
     - name: Build Debug APK
       run: ./gradlew assembleDebug --stacktrace
 
-    # 5. Build ပြီးပါက APK ကို Artifact အဖြစ် Upload တင်ခြင်း
+    # 6. Upload APK Artifact
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
